@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>프로필 수정</h1>
+
+    <div id="button"></div>
+    <div><%= data.userid %> </div>
+    <div><%= data.pw %> </div>
+    <div><%= data.name %> </div>
+
+    <form name="profile-form">
+        <input type="text" id="userid" value="<%= data.userid %>"/>
+        <input type="password" id="pw" value=""/>
+        <input type="text" id="name" value="<%= data.name %>">
+        <button type="button" onclick="edit_profile()">수정</button>
+        <button type="button" onclick="delete_profile()">삭제</button>
+    </form>
+    <script>
+
+        function edit_profile(){
+            const form = document.forms['profile-form'];
+            // if(form.pw.value === ""){
+            //     console.log("비밀번호 비어있음");
+            // }
+            axios({
+                method:'patch',
+                url:'/profile/edit',
+                data: {
+                    userid:form.userid.value,
+                    pw:form.pw.value,
+                    name:form.name.value
+                }
+            }).then((res)=>{
+                console.log('edit res',res.data);
+                if(res.data.result){
+                    alert('수정 성공');
+                    document.location.href='/';
+                }
+            })
+        };
+
+        function delete_profile(){
+            const form = document.forms['profile-form'];
+            axios({
+                    method: 'DELETE',
+                    url: '/profile/delete',
+                    data: {
+                        userid:form.userid.value,
+  
+                    },
+                }).then((res) => {
+                    if (res.data.result) {
+                        alert("삭제되었습니다!")
+                        document.location.href = "/";
+                    }
+                });
+            // axios({
+            //     method:'delete',
+            //     url:'/profile/delete',
+            //     data: {
+            //         userid:form.userid.value,
+            //     }
+            // }).then((res)=>{
+            //     console.log('edit res',res.data);
+            //     if(res.data.result){
+            //         alert('삭제 성공');
+            //         document.location.href='/';
+            //     }
+            // })
+        }
+
+
+        // profile();
+
+        // function profile(){
+
+        //     const button = document.querySelector('#button');
+        //     let data = '';
+        //     axios({
+        //         method:'post',
+        //         url: '/profile',
+        //         data: {
+
+        //         }
+        //     }).then((res)=>{
+        //         console.log("profile res",res.data);
+        //         data = `<p>ID : ${res.data.memberinfo}</p>`
+        //         button.innerHTML = data;
+        //     });
+
+           
+        // }
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>로그인화면</h1>
+    <form name="login-form">
+        <input type="text" id="userid"/>
+        <input type="password" id="pw" />
+        <button type="button" onclick="login()">로그인</button>
+    </form>
+
+    <!-- <form action="/token" method="post" name="hidden-form" >
+        <input type="hidden" name="userid">
+    </form>
+    -->
+    <script>
+        function login(){
+            const form = document.forms['login-form'];
+
+            axios({
+                method : "post",
+                url : "/login",
+                data : {
+                   userid: form.userid.value,
+                   pw : form.pw.value
+                }
+            }).then((res)=>{
+                console.log("res.data.result",res.data.result);
+                console.log("res.data.token",res.data.token);
+                if(res.data.token){
+                    console.log("res.data.data",res.data.data.id);
+                    localStorage.setItem('login',res.data.token);
+                    alert('로그인 성공');
+                    // const hidden_form = document.forms['hidden-form'];
+                    // hidden_form.userid.value = form.userid.value;
+                    // hidden_form.submit();
+                    //document.location.href=`/profile/${res.data.data.id}`;
+                    document.location.href=`/`;
+                }else{
+                    alert('로그인 실패');
+                }
+            })
+        }
+    </script>
+</body>
+</html>

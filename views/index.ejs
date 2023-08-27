@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>메인 화면</h1>
+
+   
+
+    
+    <div id="button"></div>
+    <div id="profile"></div>
+    <script>
+        jwt();
+        function jwt(){
+            const token = localStorage.getItem('login');
+            const button = document.querySelector('#button');
+            const profile = document.querySelector('#profile');
+            let data = '';
+            let profile_button = '';
+            if(!token){
+                console.log("token 없음");
+                data = `<a href="signup">회원가입</a> <br/>
+                            <a href="login">로그인</a> <br/>`;
+                            button.innerHTML= data;
+                            profile.innerHTML= profile_button;
+            }else{
+                axios({
+              method : "post",
+              url : "/token",
+              headers : {
+                Authorization: `Bearer ${token}`
+              }
+            }).then((res)=>{
+                console.log("res",res);
+                console.log("res.data.result",res.data.result);
+                console.log("res.data.name",res.data.name);
+                console.log("res.data",res.data);
+                if(res.data.result){
+                    data = `<p>${res.data.data.name}님 환영합니다</p> 
+                    <button type="button" onclick="logout()">로그아웃</button>
+                    `
+                    profile_button = `<a href="profile/${res.data.data.id}" id="profile">프로필수정</a><br/>`
+                }
+                button.innerHTML= data;
+            profile.innerHTML= profile_button;
+            })
+          
+            
+            }
+
+            
+        }
+        
+        function logout(){
+
+            localStorage.clear();
+            document.location.reload();
+        }
+    </script>
+</body>
+</html>
